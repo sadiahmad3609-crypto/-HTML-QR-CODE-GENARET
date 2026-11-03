@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>LUFFY GAMER - QR Code Generator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:22px 14px;background:#080808;color:#fff;font-family:Arial,sans-serif}
+.wrap{max-width:480px;margin:0 auto}
+.card{background:#111;border:1px solid #ff2525;border-radius:20px;padding:20px;box-shadow:0 0 22px #ff202033}
+.brand{text-align:center;color:#ff3030;font-weight:900;letter-spacing:2px;font-size:14px}
+h1{text-align:center;margin:10px 0 6px;font-size:29px}
+h1 span{color:#ff2424}
+.sub{text-align:center;color:#aaa;font-size:14px;margin:0 0 22px}
+label{display:block;margin:14px 0 8px;font-weight:bold}
+textarea,input,select{width:100%;padding:14px;border:1px solid #555;border-radius:10px;background:#080808;color:#fff;font-size:16px;outline:none}
+textarea{min-height:100px;resize:vertical}
+textarea:focus,input:focus,select:focus{border-color:#ff3030}
+button{border:0;border-radius:11px;padding:14px 16px;font-size:16px;font-weight:bold;cursor:pointer}
+.primary{width:100%;margin-top:16px;background:linear-gradient(90deg,#e90000,#ff3939);color:#fff;box-shadow:0 5px 15px #ff000044}
+.secondary{background:#191919;color:#fff;border:1px solid #ff3434}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.preview{margin-top:20px;padding:18px;background:#080808;border:1px solid #333;border-radius:14px;text-align:center}
+#qrcode{min-height:20px;display:flex;justify-content:center;align-items:center}
+#qrcode canvas,#qrcode img{max-width:100%;height:auto!important;background:white;padding:10px;border-radius:8px}
+#placeholder{color:#777;font-size:14px;padding:25px 0}
+.download{width:100%;margin-top:14px;background:#12a94b;color:#fff}
+.note{text-align:center;color:#777;font-size:12px;margin:16px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <main class="card">
+  <div class="brand">👑 LUFFY GAMER TOOL</div>
+  <h1>QR Code <span>Generator</span></h1>
+  <p class="sub">তোমার লেখা বা লিংক থেকে QR Code তৈরি করো</p>
+
+  <label for="content">📝 লেখা অথবা ওয়েবসাইটের লিংক</label>
+  <textarea id="content" placeholder="এখানে লিংক বা যেকোনো লেখা লিখুন..."></textarea>
+
+  <div class="controls">
+   <div>
+    <label for="color">QR-এর রং</label>
+    <input id="color" type="color" value="#000000" style="height:48px;padding:5px">
+   </div>
+   <div>
+    <label for="size">QR-এর সাইজ</label>
+    <select id="size">
+     <option value="180">ছোট</option>
+     <option value="240" selected>মাঝারি</option>
+     <option value="320">বড়</option>
+    </select>
+   </div>
+  </div>
+
+  <button class="primary" onclick="makeQR()">⚡ Generate QR Code</button>
+
+  <section class="preview">
+   <div id="qrcode"><div id="placeholder">তোমার QR Code এখানে দেখা যাবে</div></div>
+   <button class="download" id="download" onclick="downloadQR()" style="display:none">⬇ Download QR Code</button>
+  </section>
+  <p class="note">Free • Simple • Easy to Use</p>
+ </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let qrInstance=null;
+function makeQR(){
+ const text=document.getElementById('content').value.trim();
+ if(!text){alert('আগে কিছু লেখা বা লিংক দিন।');return;}
+ if(typeof QRCode==='undefined'){alert('QR লাইব্রেরি লোড হয়নি। ইন্টারনেট চালু করে আবার চেষ্টা করুন।');return;}
+ const box=document.getElementById('qrcode');
+ box.innerHTML='';
+ const size=Number(document.getElementById('size').value);
+ const color=document.getElementById('color').value;
+ qrInstance=new QRCode(box,{text:text,width:size,height:size,colorDark:color,colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+ document.getElementById('download').style.display='block';
+}
+function downloadQR(){
+ const box=document.getElementById('qrcode');
+ const canvas=box.querySelector('canvas');
+ const img=box.querySelector('img');
+ let url='';
+ if(canvas)url=canvas.toDataURL('image/png');
+ else if(img)url=img.src;
+ if(!url){alert('আগে QR Code তৈরি করুন।');return;}
+ const a=document.createElement('a');
+ a.href=url;a.download='luffy-qr-code.png';
+ document.body.appendChild(a);a.click();a.remove();
+}
+</script>
+</body>
+</html>
